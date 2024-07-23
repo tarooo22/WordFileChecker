@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Text = DocumentFormat.OpenXml.Wordprocessing.Text; 
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace WordFileChecker
 {
@@ -31,23 +31,33 @@ namespace WordFileChecker
             InitializeCheckedListBox();
             InitializeEventHandlers();
             evaluations = new List<string>();
-            btnCompareFiles.Text = "Process File"; 
+            btnCompareFiles.Text = "Process File";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             
+            InitializeEventHandlers();
         }
 
         private void InitializeEventHandlers()
         {
+            
+            btnBrowseControlFile.Click -= btnBrowseControlFile_Click;
+            btnBrowseControlFolder.Click -= btnBrowseControlFolder_Click;
+            btnCompareFiles.Click -= btnProcessFile_Click;
+            btnAbout.Click -= btnAbout_Click;
+            btnSettings.Click -= btnSettings_Click;
+            btnBrowseFile.Click -= btnBrowseFile_Click;
+            checkedListBox1.ItemCheck -= checkedListBox1_ItemCheck;
+
+            
             btnBrowseControlFile.Click += btnBrowseControlFile_Click;
             btnBrowseControlFolder.Click += btnBrowseControlFolder_Click;
-            btnCompareFiles.Click += btnProcessFile_Click; 
+            btnCompareFiles.Click += btnProcessFile_Click;
             btnAbout.Click += btnAbout_Click;
             btnSettings.Click += btnSettings_Click;
             btnBrowseFile.Click += btnBrowseFile_Click;
-            btnProcessFile.Click += btnProcessFile_Click;
             checkedListBox1.ItemCheck += checkedListBox1_ItemCheck;
         }
 
@@ -72,102 +82,107 @@ namespace WordFileChecker
             isDialogShown = true;
             bool showDialogResult = false;
 
-            if (checkedListBox1.Items[e.Index].ToString() == "Background Color" && e.NewValue == CheckState.Checked)
+            try
             {
-                using (OptionsForm optionsForm = new OptionsForm())
+                if (checkedListBox1.Items[e.Index].ToString() == "Background Color" && e.NewValue == CheckState.Checked)
                 {
-                    showDialogResult = optionsForm.ShowDialog() == DialogResult.OK;
-                    if (showDialogResult)
+                    using (OptionsForm optionsForm = new OptionsForm())
                     {
-                        selectedPercentage = optionsForm.SelectedPercentage;
-                        selectedColor = optionsForm.SelectedColor;
-                        if (!string.IsNullOrEmpty(txtFilePath.Text))
+                        showDialogResult = optionsForm.ShowDialog() == DialogResult.OK;
+                        if (showDialogResult)
                         {
-                            ProcessWordDocument(txtFilePath.Text, selectedColor, double.Parse(selectedPercentage.TrimEnd('%')), "Background");
+                            selectedPercentage = optionsForm.SelectedPercentage;
+                            selectedColor = optionsForm.SelectedColor;
+                            if (!string.IsNullOrEmpty(txtFilePath.Text))
+                            {
+                                ProcessWordDocument(txtFilePath.Text, selectedColor, double.Parse(selectedPercentage.TrimEnd('%')), "Background");
+                            }
                         }
                     }
                 }
-            }
-            else if (checkedListBox1.Items[e.Index].ToString() == "Font Color" && e.NewValue == CheckState.Checked)
-            {
-                using (OptionsForm1 optionsForm1 = new OptionsForm1())
+                else if (checkedListBox1.Items[e.Index].ToString() == "Font Color" && e.NewValue == CheckState.Checked)
                 {
-                    showDialogResult = optionsForm1.ShowDialog() == DialogResult.OK;
-                    if (showDialogResult)
+                    using (OptionsForm1 optionsForm1 = new OptionsForm1())
                     {
-                        selectedFontPercentage = optionsForm1.SelectedFontPercentage;
-                        selectedFontColor = optionsForm1.SelectedFontColor;
-                        if (!string.IsNullOrEmpty(txtFilePath.Text))
+                        showDialogResult = optionsForm1.ShowDialog() == DialogResult.OK;
+                        if (showDialogResult)
                         {
-                            ProcessWordDocument(txtFilePath.Text, selectedFontColor, double.Parse(selectedFontPercentage.TrimEnd('%')), "Font");
+                            selectedFontPercentage = optionsForm1.SelectedFontPercentage;
+                            selectedFontColor = optionsForm1.SelectedFontColor;
+                            if (!string.IsNullOrEmpty(txtFilePath.Text))
+                            {
+                                ProcessWordDocument(txtFilePath.Text, selectedFontColor, double.Parse(selectedFontPercentage.TrimEnd('%')), "Font");
+                            }
                         }
                     }
                 }
-            }
-            else if (checkedListBox1.Items[e.Index].ToString() == "Font size" && e.NewValue == CheckState.Checked)
-            {
-                using (OptionsForm2 optionsForm2 = new OptionsForm2())
+                else if (checkedListBox1.Items[e.Index].ToString() == "Font size" && e.NewValue == CheckState.Checked)
                 {
-                    showDialogResult = optionsForm2.ShowDialog() == DialogResult.OK;
-                    if (showDialogResult)
+                    using (OptionsForm2 optionsForm2 = new OptionsForm2())
                     {
-                        selectedFontSize = optionsForm2.SelectedFontSize;
-                        selectedFontSizePercentage = optionsForm2.SelectedPercentage;
-                        if (!string.IsNullOrEmpty(txtFilePath.Text))
+                        showDialogResult = optionsForm2.ShowDialog() == DialogResult.OK;
+                        if (showDialogResult)
                         {
-                            ProcessFontSize(txtFilePath.Text, int.Parse(selectedFontSize), double.Parse(selectedFontSizePercentage));
+                            selectedFontSize = optionsForm2.SelectedFontSize;
+                            selectedFontSizePercentage = optionsForm2.SelectedPercentage;
+                            if (!string.IsNullOrEmpty(txtFilePath.Text))
+                            {
+                                ProcessFontSize(txtFilePath.Text, int.Parse(selectedFontSize), double.Parse(selectedFontSizePercentage));
+                            }
                         }
                     }
                 }
-            }
-            else if (checkedListBox1.Items[e.Index].ToString() == "Font" && e.NewValue == CheckState.Checked)
-            {
-                using (OptionsForm3 optionsForm3 = new OptionsForm3())
+                else if (checkedListBox1.Items[e.Index].ToString() == "Font" && e.NewValue == CheckState.Checked)
                 {
-                    showDialogResult = optionsForm3.ShowDialog() == DialogResult.OK;
-                    if (showDialogResult)
+                    using (OptionsForm3 optionsForm3 = new OptionsForm3())
                     {
-                        selectedFontFamily = optionsForm3.SelectedFontFamily;
-                        selectedFontPercentage = optionsForm3.SelectedPercentage;
-                        if (!string.IsNullOrEmpty(txtFilePath.Text))
+                        showDialogResult = optionsForm3.ShowDialog() == DialogResult.OK;
+                        if (showDialogResult)
                         {
-                            ProcessFontFamily(txtFilePath.Text, selectedFontFamily, double.Parse(selectedFontPercentage));
+                            selectedFontFamily = optionsForm3.SelectedFontFamily;
+                            selectedFontPercentage = optionsForm3.SelectedPercentage;
+                            if (!string.IsNullOrEmpty(txtFilePath.Text))
+                            {
+                                ProcessFontFamily(txtFilePath.Text, selectedFontFamily, double.Parse(selectedFontPercentage));
+                            }
                         }
                     }
                 }
-            }
-            else if (checkedListBox1.Items[e.Index].ToString() == "Count the paragraphs" && e.NewValue == CheckState.Checked)
-            {
-                using (OptionsForm4 optionsForm4 = new OptionsForm4())
+                else if (checkedListBox1.Items[e.Index].ToString() == "Count the paragraphs" && e.NewValue == CheckState.Checked)
                 {
-                    showDialogResult = optionsForm4.ShowDialog() == DialogResult.OK;
-                    if (showDialogResult)
+                    using (OptionsForm4 optionsForm4 = new OptionsForm4())
                     {
-                        minParagraphCount = optionsForm4.MinParagraphCount;
-                        maxParagraphCount = optionsForm4.MaxParagraphCount;
-                        if (!string.IsNullOrEmpty(txtFilePath.Text))
+                        showDialogResult = optionsForm4.ShowDialog() == DialogResult.OK;
+                        if (showDialogResult)
                         {
-                            ProcessParagraphCount(txtFilePath.Text, minParagraphCount, maxParagraphCount);
+                            minParagraphCount = optionsForm4.MinParagraphCount;
+                            maxParagraphCount = optionsForm4.MaxParagraphCount;
+                            if (!string.IsNullOrEmpty(txtFilePath.Text))
+                            {
+                                ProcessParagraphCount(txtFilePath.Text, minParagraphCount, maxParagraphCount);
+                            }
                         }
                     }
                 }
-            }
-            else if (checkedListBox1.Items[e.Index].ToString() == "Image" && e.NewValue == CheckState.Checked)
-            {
-                if (!string.IsNullOrEmpty(txtFilePath.Text))
+                else if (checkedListBox1.Items[e.Index].ToString() == "Image" && e.NewValue == CheckState.Checked)
                 {
-                    ProcessImageCheck(txtFilePath.Text);
+                    if (!string.IsNullOrEmpty(txtFilePath.Text))
+                    {
+                        ProcessImageCheck(txtFilePath.Text);
+                    }
                 }
-            }
 
-            if (!showDialogResult)
-            {
-                checkedListBox1.ItemCheck -= checkedListBox1_ItemCheck;
-                checkedListBox1.SetItemChecked(e.Index, false);
-                checkedListBox1.ItemCheck += checkedListBox1_ItemCheck;
+                if (!showDialogResult)
+                {
+                    checkedListBox1.ItemCheck -= checkedListBox1_ItemCheck;
+                    checkedListBox1.SetItemChecked(e.Index, false);
+                    checkedListBox1.ItemCheck += checkedListBox1_ItemCheck;
+                }
             }
-
-            isDialogShown = false;
+            finally
+            {
+                isDialogShown = false;
+            }
         }
 
         private void btnBrowseFile_Click(object sender, EventArgs e)
@@ -598,12 +613,11 @@ namespace WordFileChecker
         private void btnAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Word APP Checker\nVersion 0.0 :)\nDeveloped by ნიკა თარაშვილი, თორნიკე მიხელიძე,გიორგი კეკელიძე");
-
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            
+           
         }
 
         private void lstStudentFiles_DragDrop(object sender, DragEventArgs e)
@@ -652,7 +666,7 @@ namespace WordFileChecker
 
         private void ribbon_Click(object sender, EventArgs e)
         {
-
+            
         }
     }
 }
